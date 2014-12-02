@@ -7,18 +7,14 @@ def die(msg)
    exit 1
 end
 
-if ARGV.size == 0
+if (ARGV.include? "-h") || (ARGV.include? "--help")
    die <<-EOF.gsub /^ +/, ""
-      Usage: marklit [--github-flavor] file
-      Converts file to a formatted Markdown output
+      Usage: marklit [--github-flavor]
+      Converts stdin to formatted Markdown output
    EOF
 end
 
 $github_flavored = (ARGV[0] == "--github-flavor")
-path = $github_flavored ? ARGV[1] : ARGV[0]
-
-die "#{path}: No such file or directory" unless File.exists? path
-
 
 class Chunk
     def text
@@ -30,8 +26,7 @@ class DocumentationChunk < Chunk
         escaped_text = text.gsub /^\/\/\//, ''
         indent = escaped_text[/\A[ ]*/].length
         escaped_text.gsub! /^[ ]{0,#{indent}}/m, ""
-        escaped_text.strip!
-       "<br>\n" + escaped_text
+        escaped_text.strip
     end
 end
 class CodeChunk < Chunk
@@ -47,7 +42,7 @@ end
 
 chunks = []
 chunk  = nil
-File.read(path).each_line do |line|
+$stdin.each_line do |line|
    if line.strip == ''
         chunk.text << line unless chunk.nil?
    elsif line =~ /^\/[\/]+\s*-[\s-]+$/
