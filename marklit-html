@@ -1,0 +1,43 @@
+#!/bin/zsh
+
+cat <<<'
+<html>
+<head>
+<style type="text/css">
+body {
+    font-family: HelveticaNeue, sans-serif;
+    font-size: 13pt;
+}
+code {
+    font-family: Input Sans Narrow, Menlo, monospace;
+    font-weight: 500;
+}
+pre {
+    font-family: Input Mono Narrow, Menlo, monospace;
+    font-size: 12pt;
+}
+hr {
+    border: 0;
+    height: 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+h1, h2 {
+    padding-top: 20px;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+'
+pygmentize -S default -f html
+cat <<<'
+.err { border: none; }
+</style>
+</head>
+<body>'
+
+cat /dev/stdin | marklit --github-flavor | python -m markdown -x codehilite -x fenced_code
+
+cat <<<'
+</body>
+</html>
+'
+
