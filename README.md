@@ -3,7 +3,7 @@ marklit
 
 A little tool for writing literate C code using markdown.
 
-Any line starting with `///` gets treated as markdown, anything else, as code.
+Any line starting with `\s*///` gets treated as markdown, anything else, as code.
 
 ## Usage:
 ```sh
